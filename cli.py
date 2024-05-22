@@ -4,4 +4,4 @@ from click import Group
 
 
 def create_cli() -> Group:
-    return tome.create_cli()
+    return tome
