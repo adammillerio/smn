@@ -115,4 +115,4 @@ def tome(
 
 @tome.command("smn-run", default=True, help="unearth a dusty tome")
 def smn_run() -> None:
-    click.secho("grimoire", fg=color)
+    click.secho("grimoire", fg="green")
