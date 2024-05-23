@@ -31,6 +31,6 @@ setup(
     extras_require={"dev": ["black", "pyre-check"]},
     entry_points="""
     [console_scripts]
-    smn=smn.core:cli
+    smn=smn.cli:smn
   """,
 )
