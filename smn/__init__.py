@@ -14,6 +14,13 @@ from smn.context import Context, pass_context
     context_settings={"help_option_names": ["--smn-help"]},
 )
 @click.option(
+    "--tome",
+    "_tome",
+    type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True),
+    required=False,
+    help="directly specify path to root tome",
+)
+@click.option(
     "--tree",
     is_flag=True,
     type=ClickTreeParam(scoped=True, ignore_names=["smn-run"]),
@@ -32,6 +39,7 @@ from smn.context import Context, pass_context
 @pass_context
 def tome(
     ctx: Context,
+    _tome: Optional[str],
     tree: Optional[bool],
     dry_run: bool,
     disable_execution: bool,
