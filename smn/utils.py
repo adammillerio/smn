@@ -10,32 +10,41 @@ from pyre_extensions import none_throws
 
 
 class DefaultGroup(click.Group):
-    """Invokes a subcommand marked with `default=True` if any subcommand not
+    """Click command group with default command functionality.
+
+    Invokes a subcommand marked with `default=True` if any subcommand not
     chosen.
 
-    :param default_if_no_args: resolves to the default command if no arguments
-                               passed.
+    Args:
+        default_if_no_args: Resolves to the default command if no arguments passed.
 
+    Public Attributes:
+        default_cmd_name: Optional[str]. Name of the command currently set as
+            default, if any.
     """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         # To resolve as the default command.
         if not kwargs.get("ignore_unknown_options", True):
             raise ValueError("Default group accepts unknown options")
+
         self.ignore_unknown_options = True
         self.default_cmd_name: Optional[str] = kwargs.pop("default", None)
         self.default_if_no_args: bool = kwargs.pop("default_if_no_args", False)
+
         super().__init__(*args, **kwargs)
 
     def set_default_command(self, command: click.Command) -> None:
         """Sets a command function as the default command."""
         cmd_name = command.name
+
         self.add_command(command)
         self.default_cmd_name = cmd_name
 
     def parse_args(self, ctx: click.Context, args: List[str]) -> List[str]:
         if not args and self.default_if_no_args:
             args.insert(0, none_throws(self.default_cmd_name))
+
         return super().parse_args(ctx, args)
 
     def get_command(self, ctx: click.Context, cmd_name: str) -> Optional[click.Command]:
@@ -44,6 +53,7 @@ class DefaultGroup(click.Group):
             # pyre-fixme[16]: `click.core.Context` has no attribute `arg0`.
             ctx.arg0 = cmd_name
             cmd_name = none_throws(self.default_cmd_name)
+
         return super().get_command(ctx, cmd_name)
 
     def resolve_command(
@@ -54,6 +64,7 @@ class DefaultGroup(click.Group):
             # pyre-fixme[16]: `click.core.Context` has no attribute `arg0`.
             args.insert(0, ctx.arg0)
             cmd_name = cmd.name
+
         return cmd_name, cmd, args
 
     @overload
@@ -74,8 +85,10 @@ class DefaultGroup(click.Group):
         decorator: Callable[[Callable[..., Any]], click.Command] = super().command(
             *args, **kwargs
         )
+
         if not default:
             return decorator
+
         warn(
             "Use default param of DefaultGroup or set_default_command() instead",
             DeprecationWarning,
