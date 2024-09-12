@@ -7,4 +7,4 @@ from smn import tome, Context, pass_context
 def hello(ctx: Context) -> None:
     """world!"""
 
-    ctx.run(f"echo 'world!'", echo=True)
+    ctx.run("echo 'world!'", echo=True)

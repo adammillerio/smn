@@ -26,9 +26,9 @@ setup(
     install_requires=[
         "click",
         "click_tree",
-        "invoke",
+        "fabric2",
     ],
-    extras_require={"dev": ["black", "pyre-check"]},
+    extras_require={"dev": ["ruff", "pyre-check"]},
     entry_points="""
     [console_scripts]
     smn=smn.cli:smn
