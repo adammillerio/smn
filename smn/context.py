@@ -10,16 +10,20 @@ from fabric import Connection
 class Context(Connection):
     """Summoner Context.
 
-    This is an extension of the main InvokeContext which has some additional
-    context configuration and execution utilities for the summoner CLI. It is
-    used with click.make_pass_decorator to provide a pass_context decorator
+    This is an extension of the fabric Connection/invoke Context which has some
+    additional context configuration and execution utilities for the summoner CLI.
+    It is used with click.make_pass_decorator to provide a pass_context decorator
     that injects the Context as a dependency into commands.
+
+    Args:
+        host: str. SSH host to run commands on.
 
     Public Attributes:
         smn_dry_run: bool. Whether or not smn was invoked with --dry-run, which
             is a general use flag for dry run actions in commands.
         smn_debug: bool. Whether or not smn was invoked with --debug, enabling
             additional debug output command execution. Defaults to False.
+        smn_is_local: bool. True of host argument (-H/--host) is local.
     """
 
     def __init__(self, host: str, *args: Any, **kwargs: Any) -> None:

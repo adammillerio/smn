@@ -1,5 +1,5 @@
 .DS_Store
 __pycache__
-smn_cli.egg-info
+summoner_cli.egg-info
 dist
 .pyre
