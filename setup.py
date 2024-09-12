@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="smn-cli",
+    name="summoner-cli",
     version="0.0.1",
     license="MIT",
     description="a macro command runner",
