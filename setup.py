@@ -3,13 +3,13 @@ from setuptools import setup, find_packages
 
 setup(
     name="summoner-cli",
-    version="0.0.1",
+    version="0.0.2",
     license="MIT",
     description="a macro command runner",
     author="Adam Miller",
     author_email="miller@adammiller.io",
     url="https://github.com/adammillerio/smn",
-    download_url="https://github.com/adammillerio/smn/archive/v0.0.1.tar.gz",
+    download_url="https://github.com/adammillerio/smn/archive/v0.0.2.tar.gz",
     keywords=[],
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -27,6 +27,7 @@ setup(
         "click",
         "click_tree",
         "fabric2",
+        "pyre_extensions",
     ],
     extras_require={"dev": ["ruff", "pyre-check"]},
     entry_points="""

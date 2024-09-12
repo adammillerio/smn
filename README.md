@@ -1,6 +1,6 @@
 # Summoner (smn)
 
-Summoner (`smn`) is a macro-utility for definining lightweight python based
+Summoner (`smn`) is a macro-utility for defining lightweight python based
 automations using [fabric](https://github.com/fabric/fabric) and [click](https://github.com/pallets/click).
 
 # Getting Started
@@ -65,7 +65,8 @@ Host ravenholm
 ```
 
 An example tome with some basic commands is provided at [tome.py](tome.py). Summoner
-will load `./tome.py` by default if `--tome` is not provided.
+will load `./tome.py` by default if `--tome` is not provided. There is also an
+environment variable `SMN_TOME` as an alternative.
 
 
 You can explore available tomes by invoking them with the `--smn-help` option:
@@ -605,3 +606,49 @@ Alternatively, there is also the `epilog` argument to `@click.command`, which wi
 print the provided string after all of the click generated help text is provided. 
 This can be useful as an alternative for providing a standard set of command help, 
 as shown in the standardizing example above.
+
+## Root Tome Module
+
+The `--tome`/`SMN_TOME` option to the CLI can also be a path to a module that is
+in the Python classpath already. This is useful for build systems like
+[buck](https://github.com/facebook/buck2) which use an isolated classpath:
+
+```
+python_binary(
+    name = "cli",
+    # Equivalent to smn --tome path.to.root.tome
+    main_function = "smn.cli.smn",
+    runtime_env = {
+        "SMN_TOME": "path.to.root.tome"
+    },
+    ...
+)
+```
+
+# Development
+
+Install in development mode:
+```bash
+pip3 install -e '.[dev]'
+```
+
+## Type Checking
+
+Ensure no type errors are present with [pyre](https://github.com/facebook/pyre-check):
+
+```bash
+pyre check
+ƛ No type errors found
+```
+
+**Note**: Pyre daemonizes itself on first run for faster subsequent executions. Be
+sure to shut it down with `pyre kill` when finished.
+
+## Formatting
+
+Format code with the [ruff](https://github.com/astral-sh/ruff) formatter:
+
+```bash
+ruff
+8 files left unchanged
+```
