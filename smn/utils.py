@@ -1,14 +1,62 @@
 #!/usr/bin/env python3
-# Taken from: https://github.com/click-contrib/click-default-group
-# (Most) type hints added. Also removed the custom HelpFormatter as it isn't
-# really necessary.
-from typing import Any, Callable, List, Optional, Tuple, Union, overload
+from contextlib import contextmanager
+from typing import Any, Callable, Generator, List, Optional, Tuple, Union, overload
 from warnings import warn
 
 import click
+from invoke.exceptions import UnexpectedExit
 from pyre_extensions import none_throws
 
 
+@contextmanager
+def exit_on_failure() -> Generator[None, None, None]:
+    """Simple context manager for exiting on failure during command execution.
+
+    This is a context manager which will capture any nonzero exit code raised
+    during command execution, raising it via click to avoid a long stack trace
+    while still providing accurate command status. This is somewhat similar to
+    set -e in a shell script.
+
+    with exit_on_failure():
+        ctx.run("exit 1")
+    """
+
+    try:
+        yield
+    except UnexpectedExit as e:
+        raise click.exceptions.Exit(e.result.exited)
+
+
+def build_command(*args: Union[str, List[str]]) -> str:
+    """ "Build" a command.
+
+    Given strings and lists of strings, this will "flatten" them into a single
+    string, to be used as the input to an invoked command. Empty strings and
+    lists are also filtered out.
+
+    Args:
+        *args: Union[str, List[str]]. Components to build command with.
+
+    Returns:
+        command: str. Built command string.
+    """
+
+    command = []
+
+    for arg in args:
+        if type(arg) is list and arg:
+            # If arg is a non-empty list, build it and add to command.
+            command.append(build_command(*arg))
+        elif arg != "":
+            # Append all non-blank arguments.
+            command.append(arg)
+
+    return " ".join(command)
+
+
+# Taken from: https://github.com/click-contrib/click-default-group
+# (Most) type hints added. Also removed the custom HelpFormatter as it isn't
+# really necessary.
 class DefaultGroup(click.Group):
     """Click command group with default command functionality.
 

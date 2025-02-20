@@ -2,10 +2,10 @@
 import sys
 from importlib.machinery import ModuleSpec
 from importlib.util import find_spec, module_from_spec, spec_from_file_location
+from logging import Logger, getLogger
 from os.path import splitext
 from pathlib import Path
-from logging import Logger, getLogger
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 import click
 from invoke.exceptions import CollectionNotFound
