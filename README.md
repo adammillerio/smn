@@ -1,6 +1,6 @@
 # Summoner (smn)
 
-Summoner (`smn`) is a macro-utility for defining lightweight python based
+Summoner (`smn`) is a macro-utility for definining lightweight python based
 automations using [fabric](https://github.com/fabric/fabric) and [click](https://github.com/pallets/click).
 
 # Getting Started
@@ -624,6 +624,24 @@ python_binary(
     ...
 )
 ```
+
+## Command Caching
+
+The results of command runs can optionally be cached with the
+[`bkt`](https://github.com/dimo414/bkt) CLI utility. There are three args to
+the Summoner Context's `run` methods which control this:
+
+* `cache_ttl` - TTL in seconds to cache the command result.
+* `cache_stale` - An optional time in seconds, lower than the ttl. If the same
+  command is invoked between `cache_stale` and `cache_ttl`, `bkt` will cache
+  the result in the background, avoiding a run in the foreground after the ttl
+  expires.
+* `cache_force` - If True, this will force a run and re-cache of the command,
+    regardless of ttl/stale settings.
+
+Additionally, there are the `--cache-force` and `--cache-disable` options, which
+will globally modify caching behavior within `smn`, regardless of any code level
+configurations.
 
 # Development
 
