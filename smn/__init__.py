@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-from typing import Optional
 from sys import stdin
+from typing import Optional
 
 import click
 from click_tree import ClickTreeParam
 from fabric.config import Config
 
 from smn.context import Context, pass_context  # noqa: F401
+from smn.runners import Local, Remote
 
 
 @click.group(
@@ -43,6 +44,18 @@ from smn.context import Context, pass_context  # noqa: F401
     default="local",
     help="host to run commands on via ssh, defaults to local execution",
 )
+@click.option(
+    "--cache-force",
+    is_flag=True,
+    default=False,
+    help="cache: force a reload of all cached commands, regardless of ttl",
+)
+@click.option(
+    "--cache-disable",
+    is_flag=True,
+    default=False,
+    help="cache: disable all command caching",
+)
 @click.pass_context
 def tome(
     click_ctx: click.Context,
@@ -52,6 +65,8 @@ def tome(
     disable_execution: bool,
     debug: bool,
     host: str,
+    cache_force: bool,
+    cache_disable: bool,
 ) -> None:
     """a macro command runner"""
 
@@ -64,6 +79,8 @@ def tome(
 
     ctx._set(smn_dry_run=dry_run)
     ctx._set(smn_debug=debug)
+    ctx._set(smn_cache_force=cache_force)
+    ctx._set(smn_cache_disable=cache_disable)
 
     cfg = {}
     cfg["run"] = {
@@ -75,6 +92,12 @@ def tome(
         "pty": stdin.isatty(),
         # Disable all invoke command execution, this seems to also force echo=True.
         "dry": disable_execution,
+    }
+
+    # Use smn's custom Local and Remote runners for all actions.
+    cfg["runners"] = {
+        "local": Local,
+        "remote": Remote,
     }
 
     ctx.config = Config(overrides=cfg)
