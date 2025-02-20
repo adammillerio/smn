@@ -6,9 +6,15 @@ automations using [fabric](https://github.com/fabric/fabric) and [click](https:/
 # Getting Started
 ## TL; DR
 
+The quickest way to start using the CLI is with the 
+[uv](https://github.com/astral-sh/uv) package manager:
+
 ```bash
+# See uv README for other installation options
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 # Install summoner-cli
-pip install summoner-cli
+alias smn='uvx --from summoner-cli smn'
 
 # Clone and run smn against the example tome
 git clone https://github.com/adammillerio/smn.git
@@ -18,7 +24,7 @@ smn hello
 
 ## Detailed
 
-Summoner can be installed via pip:
+Summoner can be installed via pip or any other package manager:
 
 ```bash
 pip install summoner-cli
@@ -625,37 +631,26 @@ python_binary(
 )
 ```
 
-## Command Caching
-
-The results of command runs can optionally be cached with the
-[`bkt`](https://github.com/dimo414/bkt) CLI utility. There are three args to
-the Summoner Context's `run` methods which control this:
-
-* `cache_ttl` - TTL in seconds to cache the command result.
-* `cache_stale` - An optional time in seconds, lower than the ttl. If the same
-  command is invoked between `cache_stale` and `cache_ttl`, `bkt` will cache
-  the result in the background, avoiding a run in the foreground after the ttl
-  expires.
-* `cache_force` - If True, this will force a run and re-cache of the command,
-    regardless of ttl/stale settings.
-
-Additionally, there are the `--cache-force` and `--cache-disable` options, which
-will globally modify caching behavior within `smn`, regardless of any code level
-configurations.
-
 # Development
 
-Install in development mode:
+All development on smn can be handled through the `uv` tool:
+
 ```bash
-pip3 install -e '.[dev]'
+uv sync
+Resolved 34 packages in 0.38ms
+Audited 33 packages in 0.06ms
 ```
+
+Invocations of `uv` will read configuration from the [pyproject.toml](pyproject.toml)
+file and configure a virtual environment with `smn` and it's dependencies under
+`.venv` in the repository.
 
 ## Type Checking
 
 Ensure no type errors are present with [pyre](https://github.com/facebook/pyre-check):
 
 ```bash
-pyre check
+uv run pyre check
 ƛ No type errors found
 ```
 
@@ -667,6 +662,6 @@ sure to shut it down with `pyre kill` when finished.
 Format code with the [ruff](https://github.com/astral-sh/ruff) formatter:
 
 ```bash
-ruff
+uv run ruff format
 8 files left unchanged
 ```
