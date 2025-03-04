@@ -4,7 +4,7 @@ from typing import Optional
 
 import click
 from click_tree import ClickTreeParam
-from fabric.config import Config
+from fabric2.config import Config
 
 from smn.context import Context, pass_context  # noqa: F401
 from smn.runners import Local, Remote

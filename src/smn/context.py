@@ -2,7 +2,7 @@
 from typing import Any, Callable, Optional, Tuple, Union, cast
 
 import click
-from fabric import Connection
+from fabric2 import Connection
 from invoke.exceptions import UnexpectedExit
 from invoke.runners import Promise, Result
 
