@@ -113,12 +113,15 @@ def smn(_tome: Optional[str], smn_help: bool, command: Tuple[str, ...]) -> None:
 
             raise click.exceptions.Exit(2)
     except ModuleNotFoundError:
+        logger.exception(f"encountered ModuleNotFound while loading {_tome}")
         click.secho(f"could not import a root tome at {_tome}", fg="red")
         raise click.exceptions.Exit(3)
     except FileNotFoundError:
+        logger.exception(f"encountered FileNotFound while loading {_tome}")
         click.secho(f"could not find a root tome file at {_tome}", fg="red")
         raise click.exceptions.Exit(4)
     except ValueError:
+        logger.exception(f"encountered ValueError while loading {_tome}")
         click.secho(f"no valid python module for root tome at {_tome}", fg="red")
         raise click.exceptions.Exit(5)
     except Exception:
