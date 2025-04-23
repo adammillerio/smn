@@ -6,7 +6,7 @@ automations using [fabric](https://github.com/fabric/fabric) and [click](https:/
 # Getting Started
 ## TL; DR
 
-The quickest way to start using the CLI is with the
+The quickest way to start using the CLI is with the 
 [uv](https://github.com/astral-sh/uv) package manager:
 
 ```bash
