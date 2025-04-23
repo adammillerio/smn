@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import time
 from io import DEFAULT_BUFFER_SIZE
-from typing import BinaryIO
+from typing import IO, Any
 
 from fabric2.runners import Remote as FabricRemote
 from invoke.runners import Local as InvokeLocal
@@ -23,7 +23,6 @@ class Local(InvokeLocal):
         if self.context.smn_use_crlf and data == b"\n":
             data = b"\r\n"
 
-        # pyre-fixme[16]: `Local` has no attribute `_write_proc_stdin`.
         return super()._write_proc_stdin(data)
 
     # Method copied verbatim from base runner, with a single modification to only
@@ -33,8 +32,12 @@ class Local(InvokeLocal):
     # # https://github.com/pyinvoke/invoke/issues/774
     def handle_stdin(
         self,
-        input_: BinaryIO,
-        output: BinaryIO,
+        # pyre-ignore[2]: Parameter `input_` must have a type that does not
+        # contain `Any`.
+        input_: IO[Any],
+        # pyre-ignore[2]: Parameter `input_` must have a type that does not
+        # contain `Any`.
+        output: IO[Any],
         echo: bool = False,
     ) -> None:
         """
@@ -123,8 +126,12 @@ class Remote(FabricRemote):
     # # https://github.com/pyinvoke/invoke/issues/774
     def handle_stdin(
         self,
-        input_: BinaryIO,
-        output: BinaryIO,
+        # pyre-ignore[2]: Parameter `input_` must have a type that does not
+        # contain `Any`.
+        input_: IO[Any],
+        # pyre-ignore[2]: Parameter `input_` must have a type that does not
+        # contain `Any`.
+        output: IO[Any],
         echo: bool = False,
     ) -> None:
         """
