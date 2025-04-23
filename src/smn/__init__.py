@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
-from sys import stdin
 from typing import Optional
 
 import click
 from click_tree import ClickTreeParam
-from fabric2.config import Config
 
 from smn.context import Context, pass_context  # noqa: F401
-from smn.runners import Local, Remote
 
 
 @click.group(
@@ -74,30 +71,13 @@ def tome(
     # and set it on the current click.Context. This is more or less what the
     # ensure=True flag on make_pass_decorator does under the hood, but this allows
     # for constructing the Context with our own arguments.
-    ctx = Context(host)
+    ctx = Context(
+        host,
+        cache_force=cache_force,
+        cache_disable=cache_disable,
+        disable_execution=disable_execution,
+        dry_run=dry_run,
+        debug=debug,
+    )
+
     click_ctx.obj = ctx
-
-    ctx._set(smn_dry_run=dry_run)
-    ctx._set(smn_debug=debug)
-    ctx._set(smn_cache_force=cache_force)
-    ctx._set(smn_cache_disable=cache_disable)
-
-    cfg = {}
-    cfg["run"] = {
-        # Enable echo of all running commands.
-        "echo": ctx.smn_debug,
-        # Mirror tty configuration of environment that is invoking smn. For example,
-        # echo '{}' | tee empty.json will set pty=False, which will allow stdin
-        # to flow in.
-        "pty": stdin.isatty(),
-        # Disable all invoke command execution, this seems to also force echo=True.
-        "dry": disable_execution,
-    }
-
-    # Use smn's custom Local and Remote runners for all actions.
-    cfg["runners"] = {
-        "local": Local,
-        "remote": Remote,
-    }
-
-    ctx.config = Config(overrides=cfg)

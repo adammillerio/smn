@@ -1,11 +1,36 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 from contextlib import contextmanager
-from typing import Any, Callable, Generator, List, Optional, Tuple, Union, overload
+from os import PathLike
+from shlex import quote
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Generator,
+    List,
+    Optional,
+    Tuple,
+    Union,
+    overload,
+)
 from warnings import warn
 
 import click
 from invoke.exceptions import UnexpectedExit
 from pyre_extensions import none_throws
+
+if TYPE_CHECKING:
+    from smn.context import Context
+
+
+def get_context() -> Context:
+    return click.get_current_context().obj
+
+
+def esc(s: str | PathLike[str]) -> str:
+    return quote(str(s))
 
 
 @contextmanager
